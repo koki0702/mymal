@@ -54,13 +54,14 @@ def read_list(reader):
 		ret.append(error_token)
 
 	return _MalData("LIST", tuple(ret))
-	
+
 
 def read_atom(reader):
 	token = reader.peek()
 	mal_data = None
 
-	if token.isdigit():
+	#if token.isdigit():
+	if re.match('-?\d', token):
 		mal_data = _MalData("INT", int(token))
 	elif token.isnumeric():
 		mal_data = _MalData("FLOAT", float(token))

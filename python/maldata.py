@@ -8,6 +8,7 @@ class _MalData:
 	FALSE = "FALSE"
 	NIL = "NIL"
 	LIST = "LIST"
+	#FUNC = "FUNC"
 
 	def __init__(self, type_str="INT", val=None):
 		self.type = type_str
