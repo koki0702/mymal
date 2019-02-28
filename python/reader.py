@@ -15,8 +15,8 @@ class Reader:
 		return token		
 
 	def peek(self, pos=None):
-		if self.pos >= len(self.tokens):
-			raise Exception('xxx')
+		if self.pos >= len(self.tokens):			
+			raise Exception('unbalanced parens')
 
 		p = pos if pos is not None else self.pos
 		return self.tokens[p]
@@ -44,10 +44,14 @@ def read_form(reader):
 
 def read_list(reader):
 	ret = []
-	while reader.peek() != ')':
-		l = read_form(reader)
-		ret.append(l)
-		reader.next()
+	try:
+		while reader.peek() != ')':
+			l = read_form(reader)
+			ret.append(l)
+			reader.next()
+	except Exception:
+		error_token = _MalData("SYMBOL", "EOF")
+		ret.append(error_token)
 
 	return tuple(ret)
 
@@ -59,8 +63,8 @@ def read_atom(reader):
 		mal_data = _MalData("INT", int(token))
 	elif token.isnumeric():
 		mal_data = _MalData("FLOAT", float(token))
-	else:
-		mal_data = _MalData("SYMBOL", str(token))
+	else:		
+		mal_data = _MalData("STRING", str(token))
 
 	return mal_data
 
