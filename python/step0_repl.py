@@ -7,17 +7,24 @@ def EVAL(x):
 	return x
 
 def PRINT(x):
-	print(x)
 	return x
 
 def rep(x):
+	x = READ(x)
+	x = EVAL(x)
+	x = PRINT(x)
+	print(x)
+	return x
+
+
+try:
 	while True:
-		x = READ()
-		x = EVAL(x)
-		PRINT(x)
+#		print("", end='')
+		#print('>', end='')
+		#sys.stdout.flush()
+		#x = sys.stdin.readline()
+		x = input('user> ')
+		rep(x)
 
-
-while True:
-	print("user>")
-	x = sys.stdin.readline()
-	rep(x)
+except KeyboardInterrupt:
+	pass
