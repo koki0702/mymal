@@ -1,5 +1,5 @@
 import re 
-
+from maldata import _MalData
 
 
 class Reader:
@@ -53,20 +53,24 @@ def read_list(reader):
 
 def read_atom(reader):
 	token = reader.peek()
-	if token.isdigit():
-		token = int(token)
-	elif token.isnumeric():
-		token = float(token)
+	mal_data = None
 
-	return token
+	if token.isdigit():
+		mal_data = _MalData("INT", int(token))
+	elif token.isnumeric():
+		mal_data = _MalData("FLOAT", float(token))
+	else:
+		mal_data = _MalData("SYMBOL", str(token))
+
+	return mal_data
 
 
 if __name__=='__main__': 
 ## test
 	from printer import pr_str
 
-	print(read_str(':kw'))
-	"""
+	
+	
 	txts = ['123', '123 ', 'abc', 'abc ', '(123 456)', '( 123 456 789 )', '( + 2 (* 3 4) ) ']
 
 	for txt in txts:
@@ -75,4 +79,4 @@ if __name__=='__main__':
 		print(txt + '-' + t2 + '-')
 		#print(str(txt)+ '-' + str(read_str(txt)) + '-')
 
-	"""
+	
