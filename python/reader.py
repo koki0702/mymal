@@ -53,7 +53,8 @@ def read_list(reader):
 		error_token = _MalData("SYMBOL", "EOF")
 		ret.append(error_token)
 
-	return tuple(ret)
+	return _MalData("LIST", tuple(ret))
+	
 
 def read_atom(reader):
 	token = reader.peek()
@@ -64,7 +65,7 @@ def read_atom(reader):
 	elif token.isnumeric():
 		mal_data = _MalData("FLOAT", float(token))
 	else:		
-		mal_data = _MalData("STRING", str(token))
+		mal_data = _MalData("SYMBOL", str(token))
 
 	return mal_data
 

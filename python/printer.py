@@ -4,8 +4,8 @@ print_readably = True
 
 
 def pr_str(ast):
-	if isinstance(ast, tuple):
-		return "(" + " ".join([pr_str(x) for x in ast]) + ")"
+	if ast.type == "LIST":
+		return "(" + " ".join([pr_str(x) for x in ast.val]) + ")"
 	elif ast.type == "SYMBOL":
 		return ast.val
 	elif ast.type == "INT" or ast.type == "FLOAT":
