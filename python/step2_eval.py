@@ -16,23 +16,37 @@ def READ(txt):
     return ast
 
 def EVAL(ast, env):
-    if ast.type == "LIST":
-        l = ast.val
-        if len(l) == 0:
-            return ast
-        else:
-            try:
-                new_ast = eval_ast(ast, env)
-            except Exception:
-                return _MalData("STRING", '.+')
 
-            l = new_ast.val
-            f, args = l[0], l[1:]
-            res = f(*[x.val for x in args])  # apply
-            return _MalData("INT", res)
+    if ast.type != "LIST": return eval_ast(ast, env)
+    elif len(ast.val) == 0: return ast
 
+    type0 = ast.val[0].type
+
+    if type0 == "def!":
+        pass
     else:
-        return eval_ast(ast, env)
+        new_ast = eval_ast(ast, env)
+        l = new_ast.val
+        f, args = l[0], l[1:]
+        res = f(*[x.val for x in args])  # apply
+        return _MalData("INT", res)
+        #print(type0, '--------')
+
+
+def eval_ast(ast, env):
+    if ast.type == "SYMBOL":
+        key = ast.val
+        if not key in env:
+            raise Exception('no key for env:', key)
+        f = env[key]
+        print('fff', f)
+        return f
+    elif ast.type == "LIST":
+        data = tuple([EVAL(x, env) for x in ast.val])
+        return _MalData("LIST", data)
+    else:
+        return ast
+
 
 def PRINT(ast):
     txt = printer.pr_str(ast)
@@ -46,20 +60,7 @@ def rep(x, env=repl_env):
     return x
 
 
-def eval_ast(ast, env):
-    if ast.type == "SYMBOL":
-        key = ast.val
-        if not key in env:
-            raise Exception('no key for env:', key)
-        f = env[key]
-        return f
-    elif ast.type == "LIST":
-        data = tuple([EVAL(x, env) for x in ast.val])
-        return _MalData("LIST", data)
-    else:
-        return ast
-
-
+"""
 if __name__=='__main__': 
     try:
         while True:
@@ -73,3 +74,5 @@ if __name__=='__main__':
     except KeyboardInterrupt:
         pass
 
+"""
+rep('(+ 2 3)')

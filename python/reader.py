@@ -101,6 +101,8 @@ def read_list(reader, type="LIST"):
         ret.append(l)
         reader.next()
     if type == "LIST": ret = tuple(ret)
+    else: ret = list(ret)
+
     return _MalData(type, ret)
 
 

@@ -36,6 +36,8 @@ def pr_str(ast, print_readably=True):
         return "false"
     elif ast.type == "NIL":
         return "nil"
+    elif ast.type == "FUNCTION":
+        return "#<function>"
 
     else:
         raise Exception("No Data Type:", ast.type)
