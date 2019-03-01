@@ -28,6 +28,7 @@ def println(*args):
     print(txt)
     return _MalData("NIL")
 
+
 def _eq(a,b):
     S = ("LIST", "VECTOR")
 
