@@ -32,7 +32,6 @@ def EVAL(ast, env):
             elif ast0.type == "SYMBOL" and ast0.val == "let*":
                 let_env = Env(env)
                 bidings = ast.val[1]
-                assert bidings.type == "LIST"
 
                 for a, b in zip(bidings.val[0::2], bidings.val[1::2]):
                     key = a.val
