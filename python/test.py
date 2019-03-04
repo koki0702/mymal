@@ -1,12 +1,12 @@
-from step4_if_fn_do import *
+from step6_file import *
 
-
+'''
 rep('(def! a 6)')
 rep('a')
 rep('(def! b (+ a 2))')
 rep('(+ a b)')
 rep('(let* (c 2) c)')
-
+'''
 #rep('(let* (p (+ 2 3) q (+ 2 p)) (+ p q))')
 
 
@@ -52,8 +52,37 @@ rep('(= (list) (list))')
 #rep('(str "")')
 #rep('(prn "abc  def" "ghi jkl")')
 #rep('(= [] (list))')
+
+#rep('(+ 1 2)')
+#rep('(list + 1 2)')
+
+"""
+# できなかったテスト
 rep('(= [(list)] (list []))')
 print('------')
 rep('[(list)]')
 print('------')
 rep('(list [])')
+"""
+
+"""
+#rep('(str "ttt ttt")')
+rep('(def! mal-prog (list + 1 2))')
+rep('(eval mal-prog)')
+
+
+rep('(slurp "../tests/incA.mal")')
+rep('(load-file "../tests/incA.mal")')
+rep('(inc4 3)')
+
+rep('(def! a (atom 2))')
+
+rep('(def! inc3 (fn* (a) (+ 3 a)))')
+rep('(def! a (atom 2))')
+rep('(swap! a inc3)')
+"""
+
+#rep(';;tt\n(def! inc4 (fn* (a) (+ 4 a)))')
+
+rep('(load-file "../tests/incB.mal")')
+#rep('(read-string (str (slurp "../tests/incB.mal")))')

@@ -1,5 +1,7 @@
 from maldata import _MalData
-import printer
+import printer, reader
+
+
 
 
 def _mal(d):
@@ -72,8 +74,41 @@ def _str(*args):
         ret.append(printer.pr_str(ast, False))
     return _MalData("STRING", "".join(ret))
 
+def _read_string(node):
+    txt = node.val
+    ast = reader.read_str(txt)
+    return ast
+
+def _slurp(node):
+
+    path = node.val
+    with open(path) as f:
+        s = f.read()
+    return _MalData("STRING", s)
+
 def _list(*args):
     return _MalData("LIST", args)
+
+def _atom(atom):
+    return _MalData("ATOM", atom)
+
+def _is_atom(atom):
+    if atom.type == "ATOM":
+        return _MalData("TRUE")
+    return _MalData("FALSE")
+
+
+def _deref(atom):
+    return atom.val
+
+def _reset(atom, mal):
+    atom.val = mal
+    return mal
+
+def _swap(atom, f, *args):
+    _v = f.val(atom.val, *args)
+    atom.val = _v
+    return atom.val
 
 ns = {
 '+': _P(lambda a,b: a+b),
@@ -96,4 +131,12 @@ ns = {
 'println': _F(println),
 'pr-str': _F(_prs),
 'str': _F(_str),
+'read-string': _F(_read_string),
+'slurp': _F(_slurp),
+# atom
+'atom': _F(_atom),
+'atom?': _F(_is_atom),
+'deref': _F(_deref),
+'reset!': _F(_reset),
+'swap!': _F(_swap),
 }

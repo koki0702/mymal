@@ -39,6 +39,10 @@ def pr_str(ast, print_readably=True):
     elif ast.type == "FUNCTION":
         return "#<function>"
 
+    elif ast.type == "ATOM":
+
+        return "(atom " + pr_str(ast.val, print_readably) + ")"
+
     else:
         raise Exception("No Data Type:", ast.type)
 

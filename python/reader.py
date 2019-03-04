@@ -28,12 +28,14 @@ def read_str(txt):
     try:
         ast = read_form(reader)
     except Exception:
+        print("Exception:EOF --- !!!!!!!")
         ast = _MalData("SYMBOL", "EOF")
     return ast
 
 
 def tokenize(txt):
-    return re.findall(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""", txt)
+    tre = re.findall(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""", txt)
+    return [t for t in tre if t[0] != ';']
 
 SYMBOL_MAP = {'\'':'quote', '`':'quasiquote', '~':'unquote', '~@':'splice-unquote', '@':'deref'}
 

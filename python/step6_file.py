@@ -8,10 +8,6 @@ import core
 
 repl_env = Env()
 
-for key, val in core.ns.items():
-    repl_env.set(key, val)
-
-
 
 def READ(txt):
     ast = reader.read_str(txt)
@@ -39,8 +35,9 @@ def EVAL(ast, env):
         elif ast0.val == "let*":
             a1, a2 = ast.val[1], ast.val[2]
             let_env = Env(env)
-            for i in range(0, len(a1), 2):
-                let_env.set(a1[i], EVAL(a1[i + 1], let_env))
+
+            for i in range(0, len(a1.val), 2):
+                let_env.set(a1.val[i], EVAL(a1.val[i + 1], let_env))
             ast = a2
             env = let_env
         # do
@@ -61,12 +58,10 @@ def EVAL(ast, env):
             expr_ast = ast.val[2]
 
             def fn(*args):
-                pass
-                #new_env = Env(env, params, args)
-                #return EVAL(expr_ast, new_env)
+                new_env = Env(env, params, args)
+                return EVAL(expr_ast, new_env)
             fn.__ast__ = expr_ast
             fn.__gen_env__ = lambda args: Env(env, params, args)
-
             return _MalData("FUNCTION", fn)
         # apply
         else:
@@ -107,20 +102,33 @@ def rep(x, env=repl_env, out_print=True):
 
 
 
+for key, val in core.ns.items():
+    repl_env.set(key, val)
+
+repl_env.set('eval', core._F(lambda ast: EVAL(ast, repl_env)))
+
 
 rep("(def! not (fn* (a) (if a false true)))", out_print=False)
+rep("(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))", out_print=False)
 
 
 if __name__=='__main__':
+    _args = sys.argv[2:]
+    repl_env.set('*ARGV*', _MalData('LIST', list(_args)))
 
     #rep("(def! not (fn* (a) (if a false true)))")
+    if len(sys.argv) >= 2:
+        path = sys.argv[1]
+        rep('(load-file "' + path + '")')
+        sys.exit(0)
+
 
     while True:
         try:
             x = input('user> ')
             rep(x, repl_env)
-            
+
         except Exception as e:
             print("".join(traceback.format_exception(*sys.exc_info())))
         except KeyboardInterrupt:
-            pass
+            break
