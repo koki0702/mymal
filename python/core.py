@@ -110,6 +110,17 @@ def _swap(atom, f, *args):
     atom.val = _v
     return atom.val
 
+def _cons(a1, a2):
+    new_list = (a1,) + a2.val
+    return _MalData("LIST", new_list)
+
+def _concat(*args):
+    ret = []
+    for a in args:
+        for _a in a.val:
+            ret.append(_a)
+    return _MalData("LIST", tuple(ret))
+
 ns = {
 '+': _P(lambda a,b: a+b),
 '-': _P(lambda a,b: a-b),
@@ -139,4 +150,7 @@ ns = {
 'deref': _F(_deref),
 'reset!': _F(_reset),
 'swap!': _F(_swap),
+# cons
+'cons': _F(_cons),
+'concat': _F(_concat),
 }

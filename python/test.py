@@ -1,5 +1,14 @@
-from step6_file import *
+from step7_quote import *
 
+
+
+
+#rep('(quasiquote 7)')
+#rep('(quasiquote (1 2 3))')
+#rep('(quasiquote (unquote 7))')
+#rep('(quasiquote (1 (unquote lst)))')
+rep('(def! c (quote (1 "b" "d")))')
+rep('(quasiquote (1 (splice-unquote c) 3))')
 '''
 rep('(def! a 6)')
 rep('a')
@@ -84,5 +93,5 @@ rep('(swap! a inc3)')
 
 #rep(';;tt\n(def! inc4 (fn* (a) (+ 4 a)))')
 
-rep('(load-file "../tests/incB.mal")')
+#rep('(load-file "../tests/incB.mal")')
 #rep('(read-string (str (slurp "../tests/incB.mal")))')
