@@ -1,8 +1,10 @@
-from maldata import _MalData
+from maldata import _MalData, MalException
 import printer, reader
 
 
 
+def throw(obj):
+    raise MalException(obj)
 
 def _mal(d):
     if isinstance(d, bool) and d == True:
@@ -121,36 +123,87 @@ def _concat(*args):
             ret.append(_a)
     return _MalData("LIST", tuple(ret))
 
+def nth(lst, idx):
+    idx = idx.val
+    if idx < 0 or idx >= len(lst.val):
+        throw("nth:out of index")
+
+    return lst.val[idx]
+
+def first(lst):
+    if lst.val == None or len(lst.val) == 0 or lst.val[0].type == "NIL":
+        return _MalData("NIL")
+    return lst.val[0]
+
+def rest(lst):
+    if lst.val is None:
+        return _MalData("LIST", ())
+
+    return _MalData("LIST", lst.val[1:])
+
+def apply(f, *args):
+    l = tuple(args.val[0:-1] + args.val[-1])
+    return f(*l)
+
+def mapf(f, lst):
+    ret = map(f.val, lst.val)
+    return _MalData("LIST", ret)
+
+def is_nil(arg):
+    if arg.type == "NIL": return _MalData("TRUE")
+
+def is_true(arg):
+    if arg.type == "TRUE": return _MalData("TRUE")
+
+def is_false(arg):
+    if arg.type == "FALSE": return _MalData("TRUE")
+
+def is_symbol(arg):
+    if arg.type == "SYMBOL": return _MalData("TRUE")
+
 ns = {
-'+': _P(lambda a,b: a+b),
-'-': _P(lambda a,b: a-b),
-'*': _P(lambda a,b: a*b),
-'/': _P(lambda a,b: int(a/b)),
+    'throw': _F(throw),
+    'apply': _F(apply),
+    'map': _F(mapf),
 
-'list': _F(_list),
-'list?': _F(lambda *x: _mal(x[0].type == "LIST")),
-'empty?': _F(lambda *x: _mal(len(x[0].val) == 0)),
-'count': _F(lambda *x: _mal(len(x[0].val) if x[0].type != "NIL" else 0)),
-'=': _F(eq),
+    'nil?':_F(is_nil),
+    'true?':_F(is_true),
+    'false?':_F(is_false),
+    'symbol?':_F(is_symbol),
 
-'<': _P(lambda *x: x[0] < x[1]),
-'<=': _P(lambda *x: x[0] <= x[1]),
-'>': _P(lambda *x: x[0] > x[1]),
-'>=': _P(lambda *x: x[0] >= x[1]),
+    '+': _P(lambda a,b: a+b),
+    '-': _P(lambda a,b: a-b),
+    '*': _P(lambda a,b: a*b),
+    '/': _P(lambda a,b: int(a/b)),
 
-'prn': _F(prn),
-'println': _F(println),
-'pr-str': _F(_prs),
-'str': _F(_str),
-'read-string': _F(_read_string),
-'slurp': _F(_slurp),
-# atom
-'atom': _F(_atom),
-'atom?': _F(_is_atom),
-'deref': _F(_deref),
-'reset!': _F(_reset),
-'swap!': _F(_swap),
-# cons
-'cons': _F(_cons),
-'concat': _F(_concat),
+    'list': _F(_list),
+    'list?': _F(lambda *x: _mal(x[0].type == "LIST")),
+    'empty?': _F(lambda *x: _mal(len(x[0].val) == 0)),
+    'count': _F(lambda *x: _mal(len(x[0].val) if x[0].type != "NIL" else 0)),
+    '=': _F(eq),
+
+    '<': _P(lambda *x: x[0] < x[1]),
+    '<=': _P(lambda *x: x[0] <= x[1]),
+    '>': _P(lambda *x: x[0] > x[1]),
+    '>=': _P(lambda *x: x[0] >= x[1]),
+
+    'prn': _F(prn),
+    'println': _F(println),
+    'pr-str': _F(_prs),
+    'str': _F(_str),
+    'read-string': _F(_read_string),
+    'slurp': _F(_slurp),
+    # atom
+    'atom': _F(_atom),
+    'atom?': _F(_is_atom),
+    'deref': _F(_deref),
+    'reset!': _F(_reset),
+    'swap!': _F(_swap),
+    # cons
+    'cons': _F(_cons),
+    'concat': _F(_concat),
+    # idx
+    'nth': _F(nth),
+    'first': _F(first),
+    'rest': _F(rest),
 }

@@ -1,14 +1,26 @@
-from step7_quote import *
+from step9_try import *
 
 
+rep('(try* (abc 1 2) (catch* exc (prn "exc is:" exc)))')
+#rep('(try* 123 (catch* e 456))')
+#rep('(throw "err1")')
+#rep('(first nil)')
+#rep('(rest nil)')
+#rep('(macroexpand (cond false 7 false 8 false 9))')
+#rep('(cond true 7)')
+#rep('cond')
+#rep('(defmacro! unless (fn* (pred a b) `(if ~pred ~b ~a)))')
+#rep('(unless false 7 8)')
 
+#rep( '(defmacro! identity (fn* (x) x))')
+#rep('(let* (a 123) (identity a))' )
 
 #rep('(quasiquote 7)')
 #rep('(quasiquote (1 2 3))')
 #rep('(quasiquote (unquote 7))')
 #rep('(quasiquote (1 (unquote lst)))')
-rep('(def! c (quote (1 "b" "d")))')
-rep('(quasiquote (1 (splice-unquote c) 3))')
+#rep('(def! c (quote (1 "b" "d")))')
+#rep('(quasiquote (1 (splice-unquote c) 3))')
 '''
 rep('(def! a 6)')
 rep('a')
